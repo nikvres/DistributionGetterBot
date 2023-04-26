@@ -1,5 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
-using DistributionGetterBot.Models;
+﻿using DistributionGetterBot.Models;
+using Microsoft.EntityFrameworkCore;
 
 namespace DistributionGetterBot.Database
 {
