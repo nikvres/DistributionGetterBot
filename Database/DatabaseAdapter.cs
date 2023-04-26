@@ -1,11 +1,14 @@
-﻿namespace DistributionGetterBot.Database
+﻿using DistributionGetterBot.Parser;
+
+namespace DistributionGetterBot.Database
 {
 	public static class DatabaseAdapter
 	{
-		public static async Task AddDistributionToDatabase(string distributionName, Dictionary<string, string> distributionInformation)
+		public static async Task AddDistributionToDatabase(string name)
 		{
 			using var db = new ApplicationContext();
-			await db.AddAsync(db);
+			var distParser = new DistributionInfoParser();
+			await db.AddAsync(distParser.ParseInformationAboutDistribution(name));
 			db.SaveChanges();
 		}
 	}
