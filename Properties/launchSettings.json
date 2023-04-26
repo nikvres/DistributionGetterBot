@@ -1,0 +1,11 @@
+{
+  "profiles": {
+    "DistributionGetterBot": {
+      "commandName": "Project",
+        "environmentVariables": {
+            "TOKEN": "",
+            "connectionString": ""
+        }
+    }
+  }
+}
