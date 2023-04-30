@@ -4,7 +4,6 @@ using Telegram.Bot.Types;
 using Telegram.Bot.Types.Enums;
 
 TelegramBotClient client = new TelegramBotClient(Environment.GetEnvironmentVariable("TOKEN")!);
-
 client.StartReceiving(UpdateHandler, ErrorHandler);
 Console.ReadKey();
 
@@ -36,3 +35,4 @@ async Task UpdateHandler(ITelegramBotClient botClient, Update update, Cancellati
 	}
 
 }
+

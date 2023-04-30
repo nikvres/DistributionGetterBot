@@ -9,7 +9,7 @@ namespace DistributionGetterBot.Database
 		{
 			using var db = new ApplicationContext();
 			var distParser = new DistributionInfoParser();
-			await db.AddAsync(distParser.ParseInformationAboutDistribution(name));
+			db.Add(distParser.ParseInformationAboutDistribution(name).Result);
 			db.SaveChanges();
 		}
 		public static Distribution GetDistributionFromDatabase(string name)
@@ -21,6 +21,14 @@ namespace DistributionGetterBot.Database
 		{
 			using var db = new ApplicationContext();
 			return db.Distribution.ToList();
+		}
+		public static async Task AddAllDistributions()
+		{
+			var allDistributionsList = UtilsParser.GetAllAvailableDistributionValues();
+			foreach (var distribution in allDistributionsList.Result)
+			{
+				await AddDistributionToDatabase(distribution);
+			}
 		}
 	}
 }
