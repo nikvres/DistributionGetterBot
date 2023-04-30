@@ -1,7 +1,7 @@
 ﻿using AngleSharp.Dom;
 using AngleSharp.Html.Parser;
 
-namespace Parser
+namespace DistributionGetterBot.Parser
 {
 	public static class UtilsParser
 	{

@@ -1,6 +1,5 @@
 ﻿using DistributionGetterBot.Models;
 using DistributionGetterBot.Parser;
-using Microsoft.EntityFrameworkCore;
 
 namespace DistributionGetterBot.Database
 {
@@ -16,7 +15,12 @@ namespace DistributionGetterBot.Database
 		public static Distribution GetDistributionFromDatabase(string name)
 		{
 			using var db = new ApplicationContext();
-			return db.Distribution.ToList().Where((item) => item.name_distribution!.Contains(name)).First();	
+			return db.Distribution.ToList().Where((item) => item.name_distribution!.Contains(name)).First();
+		}
+		public static List<Distribution> GetAllDistributionsFromDatabase()
+		{
+			using var db = new ApplicationContext();
+			return db.Distribution.ToList();
 		}
 	}
 }
