@@ -15,7 +15,7 @@ namespace DistributionGetterBot.Database
 		public static Distribution GetDistributionFromDatabase(string name)
 		{
 			using var db = new ApplicationContext();
-			return db.Distribution.ToList().Where((item) => item.name_distribution!.Contains(name)).First();
+			return db.Distribution.ToList().Where((item) => item.value_distribution! == name).First();
 		}
 		public static List<Distribution> GetAllDistributionsFromDatabase()
 		{

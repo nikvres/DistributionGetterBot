@@ -4,6 +4,9 @@ using Telegram.Bot.Exceptions;
 using Telegram.Bot.Polling;
 using Telegram.Bot.Types;
 using Telegram.Bot.Types.Enums;
+
+#nullable disable
+
 using CancellationTokenSource cts = new();
 
 ReceiverOptions receiverOptions = new()
@@ -35,6 +38,7 @@ async Task UpdateHandler(ITelegramBotClient botClient, Update update, Cancellati
 			UpdateType.Message => (update.Message!.Text switch
 			{
 				"/help" => MessagesHandler.GetHelp(botClient, update.Message.Chat.Id),
+				string item when item.Contains("/dist") => MessagesHandler.GetDistribution(botClient, update.Message.Chat.Id, update.Message!.Text.ToLower().Split()[1]),
 				_ => Task.CompletedTask
 			}),
 			UpdateType.InlineQuery => Task.CompletedTask,

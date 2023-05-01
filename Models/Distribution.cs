@@ -17,5 +17,13 @@ namespace DistributionGetterBot.Models
 		public string? status_distribution { get; set; }
 		public string? popularity_distribution { get; set; }
 		public string? desktop_distribution { get; set; }
+		public string GetFields() =>
+			$"{name_distribution}\n" +
+			$"{description_distribution}\n" +
+			$"Based on: {based_on_distribution}\n" +
+			$"Origin: {origin_distribution}" +
+			$"Architecture: {architecture_distribution}\n" +
+			$"Category: {category_distribution}\n" +
+			$"Desktops: {desktop_distribution}\n";
 	}
 }
