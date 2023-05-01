@@ -1,11 +1,20 @@
-﻿using Telegram.Bot;
+﻿using DistributionGetterBot.Handlers;
+using Telegram.Bot;
 using Telegram.Bot.Exceptions;
+using Telegram.Bot.Polling;
 using Telegram.Bot.Types;
 using Telegram.Bot.Types.Enums;
+using CancellationTokenSource cts = new();
+
+ReceiverOptions receiverOptions = new()
+{
+	AllowedUpdates = Array.Empty<UpdateType>()
+};
 
 TelegramBotClient client = new TelegramBotClient(Environment.GetEnvironmentVariable("TOKEN")!);
-client.StartReceiving(UpdateHandler, ErrorHandler);
-Console.ReadKey();
+client.StartReceiving(UpdateHandler, ErrorHandler, receiverOptions, cts.Token);
+Console.ReadLine();
+cts.Cancel();
 
 async Task ErrorHandler(ITelegramBotClient botClient, Exception exception, CancellationToken cancellationToken)
 {
@@ -23,7 +32,11 @@ async Task UpdateHandler(ITelegramBotClient botClient, Update update, Cancellati
 	{
 		await (update.Type switch
 		{
-			UpdateType.Message => Task.CompletedTask,
+			UpdateType.Message => (update.Message!.Text switch
+			{
+				"/help" => MessagesHandler.GetHelp(botClient, update.Message.Chat.Id),
+				_ => Task.CompletedTask
+			}),
 			UpdateType.InlineQuery => Task.CompletedTask,
 			UpdateType.CallbackQuery => Task.CompletedTask,
 			_ => Task.CompletedTask
