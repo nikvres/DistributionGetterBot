@@ -14,7 +14,7 @@ namespace DistributionGetterBot.Parser
 
 		public async Task<Distribution> ParseInformationAboutDistribution(string name)
 		{
-			var page = await client.GetAsync(MainLink+name).Result.Content.ReadAsStringAsync();
+			var page = await client.GetAsync(MainLink + name).Result.Content.ReadAsStringAsync();
 			document = await parser.ParseDocumentAsync(page);
 			return GetDistributionFullInformation();
 		}

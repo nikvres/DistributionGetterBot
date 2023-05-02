@@ -13,8 +13,16 @@ namespace DistributionGetterBot.Handlers
 		}
 		public static async Task GetDistribution(ITelegramBotClient botClient, ChatId chatId, string distributionName)
 		{
-			Distribution distribution = DatabaseAdapter.GetDistributionFromDatabase(distributionName);
-			await botClient.SendTextMessageAsync(chatId, distribution.GetFields());
+			try
+			{
+				Distribution distribution = DatabaseAdapter.GetDistributionFromDatabase(distributionName);
+				await botClient.SendTextMessageAsync(chatId, distribution.GetFields());
+			}
+			catch (InvalidOperationException)
+			{
+				await botClient.SendTextMessageAsync(chatId, "There is no distribution in database");
+			}
+			
 		}
 	}
 }
