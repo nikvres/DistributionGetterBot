@@ -15,7 +15,7 @@ namespace DistributionGetterBot.Handlers
 		{
 			try
 			{
-				Distribution distribution = DatabaseAdapter.GetDistributionFromDatabase(distributionName);
+				Distribution distribution = DatabaseDAL.GetDistributionFromDatabase(distributionName);
 				await botClient.SendTextMessageAsync(chatId, distribution.GetFields());
 			}
 			catch (InvalidOperationException)

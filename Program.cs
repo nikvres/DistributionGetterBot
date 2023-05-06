@@ -29,12 +29,12 @@ async Task UpdateHandler(ITelegramBotClient botClient, Update update, Cancellati
 	{
 		await (update.Type switch
 		{
-			UpdateType.Message => (update.Message.Text switch
+			UpdateType.Message => update.Message.Text! switch
 			{
 				"/help" => MessagesHandler.GetHelp(botClient, update.Message.Chat.Id),
-				var item when item.Split().Length.Equals(2) => MessagesHandler.GetDistribution(botClient, update.Message.Chat.Id, update.Message.Text.Split()[1]),
+				string item when item.Split().Length.Equals(2) => MessagesHandler.GetDistribution(botClient, update.Message.Chat.Id, update.Message.Text.Split()[1]),
 				_ => Task.CompletedTask
-			}),
+			},
 			UpdateType.InlineQuery => Task.CompletedTask,
 			UpdateType.CallbackQuery => Task.CompletedTask,
 			_ => Task.CompletedTask

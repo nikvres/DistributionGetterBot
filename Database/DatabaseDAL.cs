@@ -3,19 +3,19 @@ using DistributionGetterBot.Parser;
 
 namespace DistributionGetterBot.Database
 {
-	public static class DatabaseAdapter
+	public static class DatabaseDAL
 	{
 		public static async Task AddDistributionToDatabase(string name)
 		{
 			using var db = new ApplicationContext();
 			var distParser = new DistributionInfoParser();
-			db.Add(distParser.ParseInformationAboutDistribution(name).Result);
+			await db.AddAsync(distParser.ParseInformationAboutDistribution(name).Result);
 			db.SaveChanges();
 		}
 		public static Distribution GetDistributionFromDatabase(string name)
 		{
 			using var db = new ApplicationContext();
-			return db.Distribution.ToList().Where((item) => item.value_distribution! == name).First();
+			return db.Distribution.ToList().Where((item) => item.ValueDistribution! == name).First();
 		}
 		public static List<Distribution> GetAllDistributionsFromDatabase()
 		{
