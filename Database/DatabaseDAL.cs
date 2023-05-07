@@ -8,7 +8,7 @@ namespace DistributionGetterBot.Database
 		public static async Task AddDistributionToDatabase(string name)
 		{
 			using var db = new ApplicationContext();
-			var distParser = new DistributionInfoParser();
+			var distParser = new DistributionParser();
 			await db.AddAsync(distParser.ParseInformationAboutDistribution(name).Result);
 			db.SaveChanges();
 		}

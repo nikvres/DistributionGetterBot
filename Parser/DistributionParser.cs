@@ -2,34 +2,25 @@
 using AngleSharp.Html.Dom;
 using AngleSharp.Html.Parser;
 using DistributionGetterBot.Models;
-
+using System.IO.Enumeration;
 namespace DistributionGetterBot.Parser
 {
-	public class DistributionInfoParser
+	public class DistributionParser
 	{
-		private const string MainLink = "https://distrowatch.com/table.php?distribution=";
+		private const string MainLink = "https://distrowatch.com/";
+		
 		private readonly HtmlParser parser = new HtmlParser();
 		private readonly HttpClient client = new HttpClient();
+
 		private IHtmlDocument document;
 
 		public async Task<Distribution> ParseInformationAboutDistribution(string name)
 		{
-			var page = await client.GetAsync(MainLink + name).Result.Content.ReadAsStringAsync();
+			var page = await client.GetAsync(MainLink + "table.php?distribution=" + name).Result.Content.ReadAsStringAsync();
 			document = await parser.ParseDocumentAsync(page);
-			return GetDistributionFullInformation();
+			return GetDistribution();
 		}
-
-		private string GetDistributionName()
-		{
-			return document.QuerySelector("td.TablesTitle > div > h1")!.Text();
-		}
-
-		private string GetDistributionNameWithoutSpace()
-		{
-			return document.QuerySelector("select[name = distribution] > option[selected]")!.GetAttribute("value")!;
-		}
-
-		private Distribution GetDistributionFullInformation()
+		private Distribution GetDistribution()
 		{
 			var distributionInformation = GetInformationDictionary();
 			return new Distribution
@@ -47,7 +38,6 @@ namespace DistributionGetterBot.Parser
 				DescriptionDistribution = distributionInformation["Description"],
 			};
 		}
-
 		private Dictionary<string, string> GetInformationDictionary()
 		{
 			Dictionary<string, string> dictionaryDistributionInformation = new Dictionary<string, string>();
@@ -61,7 +51,28 @@ namespace DistributionGetterBot.Parser
 			var info = document.QuerySelector("td.TablesTitle > div:nth-child(2)")!.Text().Split("\n", StringSplitOptions.RemoveEmptyEntries)[4];
 			dictionaryDistributionInformation.Add("Description", info);
 			dictionaryDistributionInformation.Add("Value", GetDistributionNameWithoutSpace());
+			dictionaryDistributionInformation.Add("PicturePath", GetPictureDistributionDestination(GetDistributionNameWithoutSpace()));
 			return dictionaryDistributionInformation;
+		}
+		private string GetPictureDistributionDestination(string name)
+		{
+			foreach (string fileName in Directory.GetFiles(Environment.CurrentDirectory + "/img"))
+			{
+				if (fileName.Equals(Environment.CurrentDirectory + "/img/" + name))
+				{
+					return fileName;
+				}
+			}
+			return string.Empty;
+		}
+		private string GetDistributionName()
+		{
+			return document.QuerySelector("td.TablesTitle > div > h1")!.Text();
+		}
+
+		private string GetDistributionNameWithoutSpace()
+		{
+			return document.QuerySelector("select[name = distribution] > option[selected]")!.GetAttribute("value")!;
 		}
 	}
 }

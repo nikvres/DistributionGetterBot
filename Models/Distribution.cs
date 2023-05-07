@@ -17,7 +17,7 @@ namespace DistributionGetterBot.Models
 		public string? StatusDistribution { get; set; }
 		public string? PopularityDistribution { get; set; }
 		public string? DesktopDistribution { get; set; }
-		public FileStream? PictureDistribution { get; set; }
+		public string? PictureDistribution { get; set; }
 
 		public string GetFields() =>
 			$"{NameDistribution}\n" +
