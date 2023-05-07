@@ -1,13 +1,12 @@
-﻿using DistributionGetterBot.Handlers;
+﻿using DistributionGetterBot.Database;
+using DistributionGetterBot.Handlers;
 using Telegram.Bot;
 using Telegram.Bot.Exceptions;
 using Telegram.Bot.Types;
 using Telegram.Bot.Types.Enums;
 
 #nullable disable
-
 using CancellationTokenSource cts = new();
-
 TelegramBotClient client = new TelegramBotClient(Environment.GetEnvironmentVariable("TOKEN")!);
 client.StartReceiving(UpdateHandler, ErrorHandler, cancellationToken: cts.Token);
 Console.ReadLine();

@@ -2,6 +2,7 @@
 using DistributionGetterBot.Models;
 using Telegram.Bot;
 using Telegram.Bot.Types;
+using Telegram.Bot.Types.InputFiles;
 
 namespace DistributionGetterBot.Handlers
 {
@@ -16,6 +17,8 @@ namespace DistributionGetterBot.Handlers
 			try
 			{
 				Distribution distribution = DatabaseDAL.GetDistributionFromDatabase(distributionName);
+				await using Stream stream = System.IO.File.OpenRead(distribution.PictureDistribution);
+				await botClient.SendPhotoAsync(chatId, stream);
 				await botClient.SendTextMessageAsync(chatId, distribution.GetFields());
 			}
 			catch (InvalidOperationException)

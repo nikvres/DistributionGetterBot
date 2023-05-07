@@ -7,11 +7,11 @@ namespace DistributionGetterBot.Parser
 	{
 		private static readonly HttpClient client = new HttpClient();
 		private static readonly HtmlParser parser = new HtmlParser();
-		private static readonly string MainLink = "https://distrowatch.com/table.php?distribution=3cx";
+		private static readonly string MainLink = "https://distrowatch.com/";
 		public static async Task<List<string>> GetAllAvailableDistributions()
 		{
 			List<string> listOfDistributions = new List<string>();
-			var page = await client.GetAsync(MainLink).Result.Content.ReadAsStringAsync();
+			var page = await client.GetAsync(MainLink + "3cx").Result.Content.ReadAsStringAsync();
 			var distributionNames = parser.ParseDocumentAsync(page).Result.QuerySelectorAll("select[name=distribution] > option");
 			foreach (var distributionName in distributionNames)
 			{
@@ -22,7 +22,7 @@ namespace DistributionGetterBot.Parser
 		public static async Task<List<string>> GetAllAvailableDistributionValues()
 		{
 			List<string> listOfDistributions = new List<string>();
-			var page = await client.GetAsync(MainLink).Result.Content.ReadAsStringAsync();
+			var page = await client.GetAsync(MainLink + "3cx").Result.Content.ReadAsStringAsync();
 			var distributionNames = parser.ParseDocumentAsync(page).Result.QuerySelectorAll("select[name=distribution] > option");
 			foreach (var distributionName in distributionNames)
 			{
@@ -33,13 +33,21 @@ namespace DistributionGetterBot.Parser
 		}
 		public static async Task DownloadPicture(string name)
 		{
-			var page = await client.GetAsync(MainLink).Result.Content.ReadAsStringAsync();
+			var page = await client.GetAsync(MainLink + "table.php?distribution=" + name).Result.Content.ReadAsStringAsync();
 			IDocument document = await parser.ParseDocumentAsync(page);
 			string? picturePath = document.QuerySelector("td.TablesTitle > div:nth-child(2) > img")!.GetAttribute("src");
-			var picture = await client.GetAsync(MainLink + picturePath).Result.Content.ReadAsStreamAsync();
-			using (FileStream fileStream = new FileStream($"{Environment.CurrentDirectory}/{name}.png", FileMode.OpenOrCreate))
+			var picture = client.GetAsync(MainLink + picturePath).Result.Content.ReadAsStreamAsync().Result;
+			using (FileStream fileStream = new FileStream($"{Environment.CurrentDirectory}/img/{name}.png", FileMode.OpenOrCreate))
 			{
 				await picture.CopyToAsync(fileStream);
+			}
+		}
+
+		public static async Task DownloadAllPictures(List<string> distributions)
+		{
+			foreach (var distribution in distributions)
+			{
+				await DownloadPicture(distribution);
 			}
 		}
 
