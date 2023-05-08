@@ -50,7 +50,5 @@ namespace DistributionGetterBot.Parser
 				await DownloadPicture(distribution);
 			}
 		}
-
-
 	}
 }

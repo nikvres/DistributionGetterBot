@@ -8,7 +8,7 @@ namespace DistributionGetterBot.Parser
 	public class DistributionParser
 	{
 		private const string MainLink = "https://distrowatch.com/";
-		
+
 		private readonly HtmlParser parser = new HtmlParser();
 		private readonly HttpClient client = new HttpClient();
 
@@ -66,12 +66,12 @@ namespace DistributionGetterBot.Parser
 			}
 			return string.Empty;
 		}
-		private string GetDistributionDescription() => 
+		private string GetDistributionDescription() =>
 			document.QuerySelector("td.TablesTitle > div:nth-child(2)")!.Text().Split("\n", StringSplitOptions.RemoveEmptyEntries)[4];
-		private string GetDistributionName() => 
+		private string GetDistributionName() =>
 			document.QuerySelector("td.TablesTitle > div > h1")!.Text();
-		private string GetDistributionNameWithoutSpace() => 
+		private string GetDistributionNameWithoutSpace() =>
 			document.QuerySelector("select[name = distribution] > option[selected]")!.GetAttribute("value")!;
-		
+
 	}
 }

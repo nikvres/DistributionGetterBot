@@ -2,7 +2,6 @@
 using DistributionGetterBot.Models;
 using Telegram.Bot;
 using Telegram.Bot.Types;
-using Telegram.Bot.Types.InputFiles;
 
 namespace DistributionGetterBot.Handlers
 {
@@ -25,7 +24,7 @@ namespace DistributionGetterBot.Handlers
 			{
 				await botClient.SendTextMessageAsync(chatId, "There is no distribution in database");
 			}
-			
+
 		}
 	}
 }
