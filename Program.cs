@@ -6,8 +6,10 @@ using Telegram.Bot.Types.Enums;
 
 #nullable disable
 using CancellationTokenSource cts = new();
+
 TelegramBotClient client = new TelegramBotClient(Environment.GetEnvironmentVariable("TOKEN")!);
 client.StartReceiving(UpdateHandler, ErrorHandler, cancellationToken: cts.Token);
+
 Console.ReadLine();
 cts.Cancel();
 
@@ -25,12 +27,15 @@ async Task UpdateHandler(ITelegramBotClient botClient, Update update, Cancellati
 {
 	try
 	{
+		Console.WriteLine(update.Message.From.Id);
 		await (update.Type switch
 		{
 			UpdateType.Message => update.Message.Text! switch
 			{
+				"/start" => MessagesHandler.GetStarted(botClient, update.Message.Chat.Id, update.Message.From),
 				"/help" => MessagesHandler.GetHelp(botClient, update.Message.Chat.Id),
 				string item when item.ToLower().StartsWith("/dist") => MessagesHandler.GetDistribution(botClient, update.Message.Chat.Id, update.Message.Text),
+				"" => Task.CompletedTask,
 				_ => Task.CompletedTask
 			},
 			UpdateType.InlineQuery => Task.CompletedTask,
@@ -42,6 +47,5 @@ async Task UpdateHandler(ITelegramBotClient botClient, Update update, Cancellati
 	{
 		Console.WriteLine($"Exception while handling: {update.Type}: {ex}");
 	}
-
 }
 

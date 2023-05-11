@@ -7,7 +7,12 @@ namespace DistributionGetterBot.Handlers
 {
 	public static class MessagesHandler
 	{
-		public static async Task GetHelp(ITelegramBotClient botClient, ChatId chatId)
+        public static async Task GetStarted(ITelegramBotClient botClient, ChatId chatId, User user)
+        {
+            await botClient.SendTextMessageAsync(chatId, "Hello, this is distribution bot.");
+			await DatabaseDAL.AddUserToDatabase(user);
+        }
+        public static async Task GetHelp(ITelegramBotClient botClient, ChatId chatId)
 		{
 			await botClient.SendTextMessageAsync(chatId, "hello");
 		}
@@ -15,9 +20,10 @@ namespace DistributionGetterBot.Handlers
 		{
 			try
 			{
-				if (messageText.Split().Length.Equals(2))
+				var splittedMessage = messageText.Split();
+				if (splittedMessage.Length.Equals(2))
                 {
-                    Distribution distribution = DatabaseDAL.GetDistributionFromDatabase(messageText.Split()[1]);
+                    Distribution distribution = DatabaseDAL.GetDistributionFromDatabase(splittedMessage[1]);
                     await using Stream stream = System.IO.File.OpenRead(distribution.PictureDistribution!);
                     await botClient.SendPhotoAsync(chatId, stream);
                     await botClient.SendTextMessageAsync(chatId, distribution.GetFields());

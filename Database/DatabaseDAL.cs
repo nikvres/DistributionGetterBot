@@ -1,5 +1,6 @@
 ﻿using DistributionGetterBot.Models;
 using DistributionGetterBot.Parser;
+using Telegram.Bot.Types;
 
 namespace DistributionGetterBot.Database
 {
@@ -17,7 +18,7 @@ namespace DistributionGetterBot.Database
 			using var db = new ApplicationContext();
 			return db.Distribution.ToList().Where((item) => item.ValueDistribution! == name).First();
 		}
-		public static List<Distribution> GetAllDistributionsFromDatabase()
+		public static List<Distribution> GetAllDistributionSsFromDatabase()
 		{
 			using var db = new ApplicationContext();
 			return db.Distribution.ToList();
@@ -30,5 +31,10 @@ namespace DistributionGetterBot.Database
 				await AddDistributionToDatabase(distribution);
 			}
 		}
-	}
+		public static async Task AddUserToDatabase(User user)
+		{
+            using var db = new ApplicationContext();
+			await db.User.AddAsync(new UserModel(Convert.ToString(user.Id), user.Username, user.FirstName, user.LastName));
+        }
+    }
 }
