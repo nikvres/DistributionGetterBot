@@ -11,14 +11,22 @@ namespace DistributionGetterBot.Handlers
 		{
 			await botClient.SendTextMessageAsync(chatId, "hello");
 		}
-		public static async Task GetDistribution(ITelegramBotClient botClient, ChatId chatId, string distributionName)
+		public static async Task GetDistribution(ITelegramBotClient botClient, ChatId chatId, string messageText)
 		{
 			try
 			{
-				Distribution distribution = DatabaseDAL.GetDistributionFromDatabase(distributionName);
-				await using Stream stream = System.IO.File.OpenRead(distribution.PictureDistribution);
-				await botClient.SendPhotoAsync(chatId, stream);
-				await botClient.SendTextMessageAsync(chatId, distribution.GetFields());
+				if (messageText.Split().Length.Equals(2))
+                {
+                    Distribution distribution = DatabaseDAL.GetDistributionFromDatabase(messageText.Split()[1]);
+                    await using Stream stream = System.IO.File.OpenRead(distribution.PictureDistribution!);
+                    await botClient.SendPhotoAsync(chatId, stream);
+                    await botClient.SendTextMessageAsync(chatId, distribution.GetFields());
+                }
+				else
+				{
+					await botClient.SendTextMessageAsync(chatId, "Usage: /dist <distribution_name>");
+				}
+                
 			}
 			catch (InvalidOperationException)
 			{
