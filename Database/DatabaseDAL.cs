@@ -34,7 +34,20 @@ namespace DistributionGetterBot.Database
 		public static async Task AddUserToDatabase(User user)
 		{
             using var db = new ApplicationContext();
-			await db.User.AddAsync(new UserModel(Convert.ToString(user.Id), user.Username, user.FirstName, user.LastName));
+			if (db.User.Where(p => user.Id == p.IdUser).First().IdUser.Equals(user.Id))
+			{
+				await Task.CompletedTask;
+            }
+			else
+			{
+                await db.User.AddAsync(new UserModel(user.Id, user.Username!, user.FirstName, user.LastName));
+                db.SaveChanges();
+            }
+        }
+		public static async Task DeleteUserFromDatabase(UserModel user)
+		{
+            using var db = new ApplicationContext();
+			db.User.Remove(user);
         }
     }
 }
